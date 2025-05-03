@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-
+      <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 
 <title>Water Tracker with Reminders</title>
     <style>
@@ -22,6 +21,10 @@
             font-size: 1em;
             margin: 5px;
         }
+        select {
+            font-size: 1em;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -30,12 +33,19 @@
     <div class="counter" id="counter">0</div>
     <button onclick="increment()">Add a Glass</button>
     <button onclick="reset()">Reset</button>
+    
+    <p>Reminder Interval:</p>
+    <select id="intervalSelect">
+        <option value="30">Every 30 minutes</option>
+        <option value="60" selected>Every hour</option>
+        <option value="120">Every 2 hours</option>
+    </select>
     <button onclick="startReminders()">Start Reminders</button>
 
     <script>
         let count = 0;
+        let reminderInterval = null;
 
-        // Initialize counter from localStorage
         const storedDate = localStorage.getItem('lastDate');
         const today = new Date().toLocaleDateString();
 
@@ -59,23 +69,28 @@
             localStorage.setItem('waterCount', count);
         }
 
-        // Request notification permission
         function requestNotificationPermission() {
             if (Notification.permission !== 'granted') {
-                Notification.requestPermission();
+                Notification.requestPermission().then(permission => {
+                    if (permission !== 'granted') {
+                        alert("Notifications are blocked. Please enable them in settings.");
+                    }
+                });
             }
         }
 
-        // Start reminder notifications
         function startReminders() {
             requestNotificationPermission();
             if (Notification.permission === 'granted') {
-                setInterval(() => {
+                clearInterval(reminderInterval); // Prevent stacking intervals
+
+                let selectedInterval = parseInt(document.getElementById('intervalSelect').value, 10);
+                reminderInterval = setInterval(() => {
                     new Notification('Time to drink water!', {
                         body: 'Stay hydrated and healthy!',
                         icon: 'https://via.placeholder.com/128/00f/fff?text=Water'
                     });
-                }, 60 * 60 * 1000); // Sends a reminder every hour
+                }, selectedInterval * 60 * 1000);
             }
         }
     </script>
