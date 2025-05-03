@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weekly Water Tracker with Graph</title>
+    
+<link rel="stylesheet" href="style.css">
+
+
+<title>Weekly Water Tracker with Graph</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
          <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
  <style>
@@ -28,14 +32,22 @@
     </style>
 </head>
 <body>
-    <h1>Weekly Water Tracker</h1>
-    <p>How many glasses of water have you had today?</p>
-    <div class="counter" id="counter">0</div>
-    <button onclick="increment()">Add a Glass</button>
-    <button onclick="reset()">Reset</button>
-    
-    <h2>Weekly History</h2>
-    <canvas id="waterChart"></canvas>
+<h1>Weekly Water Tracker</h1>
+<p>How many glasses of water have you had today?</p>
+<div class="counter" id="counter">0</div>
+<button onclick="increment()">Add a Glass</button>
+<button onclick="reset()">Reset</button>
+
+<div class="glass-container">
+    <div class="glass">
+        <div class="water-fill" id="water"></div>
+    </div>
+    <p id="count"></p>
+</div>
+
+<h2>Weekly History</h2>
+<canvas id="waterChart"></canvas>
+
 
     <script>
         let count = 0;
@@ -103,5 +115,13 @@
 
         updateChart();
     </script>
+
+<script>
+document.getElementById("water").style.height = "50%";
+</script>
+<script src="glasses.js"></script>
+
+
+
 </body>
 </html>
