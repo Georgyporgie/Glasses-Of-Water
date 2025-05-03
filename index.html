@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Tracker</title>
+    <title>Water Tracker with Reminders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,55 +27,54 @@
     <div class="counter" id="counter">0</div>
     <button onclick="increment()">Add a Glass</button>
     <button onclick="reset()">Reset</button>
+    <button onclick="startReminders()">Start Reminders</button>
 
     <script>
         let count = 0;
+
+        // Initialize counter from localStorage
+        const storedDate = localStorage.getItem('lastDate');
+        const today = new Date().toLocaleDateString();
+
+        if (storedDate === today) {
+            count = parseInt(localStorage.getItem('waterCount'), 10) || 0;
+        } else {
+            count = 0;
+            localStorage.setItem('lastDate', today);
+        }
+        document.getElementById('counter').textContent = count;
+
         function increment() {
             count++;
             document.getElementById('counter').textContent = count;
+            localStorage.setItem('waterCount', count);
         }
+
         function reset() {
             count = 0;
             document.getElementById('counter').textContent = count;
+            localStorage.setItem('waterCount', count);
+        }
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
+        }
+
+        // Start reminder notifications
+        function startReminders() {
+            requestNotificationPermission();
+            if (Notification.permission === 'granted') {
+                setInterval(() => {
+                    new Notification('Time to drink water!', {
+                        body: 'Stay hydrated and healthy!',
+                        icon: 'https://via.placeholder.com/128/00f/fff?text=Water'
+                    });
+                }, 60 * 60 * 1000); // Sends a reminder every hour
+            }
         }
     </script>
-
-
-
-<script>
-    let count = 0;
-
-    // Check stored date and count from localStorage
-    const storedDate = localStorage.getItem('lastDate');
-    const today = new Date().toLocaleDateString();
-
-    if (storedDate === today) {
-        count = parseInt(localStorage.getItem('waterCount'), 10) || 0;
-    } else {
-        // If the day has changed, reset the count
-        count = 0;
-        localStorage.setItem('lastDate', today);
-    }
-
-    document.getElementById('counter').textContent = count;
-
-    function increment() {
-        count++;
-        document.getElementById('counter').textContent = count;
-        localStorage.setItem('waterCount', count);
-    }
-
-    function reset() {
-        count = 0;
-        document.getElementById('counter').textContent = count;
-        localStorage.setItem('waterCount', count);
-    }
-</script>
-
-
-
-
-
-
 </body>
 </html>
