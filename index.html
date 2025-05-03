@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-
-<title>Water Tracker with Reminders</title>
-    <style>
+    <title>Weekly Water Tracker with Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+         <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+ <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -21,78 +21,87 @@
             font-size: 1em;
             margin: 5px;
         }
-        select {
-            font-size: 1em;
-            padding: 5px;
+        canvas {
+            max-width: 80%;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
-    <h1>Daily Water Tracker</h1>
+    <h1>Weekly Water Tracker</h1>
     <p>How many glasses of water have you had today?</p>
     <div class="counter" id="counter">0</div>
     <button onclick="increment()">Add a Glass</button>
     <button onclick="reset()">Reset</button>
     
-    <p>Reminder Interval:</p>
-    <select id="intervalSelect">
-        <option value="30">Every 30 minutes</option>
-        <option value="60" selected>Every hour</option>
-        <option value="120">Every 2 hours</option>
-    </select>
-    <button onclick="startReminders()">Start Reminders</button>
+    <h2>Weekly History</h2>
+    <canvas id="waterChart"></canvas>
 
     <script>
         let count = 0;
-        let reminderInterval = null;
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const today = new Date();
+        const todayStr = today.toLocaleDateString();
+        const currentDay = daysOfWeek[today.getDay()];
+        
+        // Load saved weekly data
+        let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
 
-        const storedDate = localStorage.getItem('lastDate');
-        const today = new Date().toLocaleDateString();
-
-        if (storedDate === today) {
-            count = parseInt(localStorage.getItem('waterCount'), 10) || 0;
-        } else {
-            count = 0;
-            localStorage.setItem('lastDate', today);
+        // Reset data at the start of a new week (Sunday)
+        if (today.getDay() === 0 && localStorage.getItem("lastReset") !== todayStr) {
+            weeklyData = {};
+            localStorage.setItem("lastReset", todayStr);
         }
-        document.getElementById('counter').textContent = count;
+
+        // Initialize counter
+        count = weeklyData[currentDay] || 0;
+        document.getElementById("counter").textContent = count;
 
         function increment() {
             count++;
-            document.getElementById('counter').textContent = count;
-            localStorage.setItem('waterCount', count);
+            document.getElementById("counter").textContent = count;
+            weeklyData[currentDay] = count;
+            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+            updateChart();
         }
 
         function reset() {
             count = 0;
-            document.getElementById('counter').textContent = count;
-            localStorage.setItem('waterCount', count);
+            document.getElementById("counter").textContent = count;
+            weeklyData[currentDay] = count;
+            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+            updateChart();
         }
 
-        function requestNotificationPermission() {
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission().then(permission => {
-                    if (permission !== 'granted') {
-                        alert("Notifications are blocked. Please enable them in settings.");
+        function updateChart() {
+            const ctx = document.getElementById("waterChart").getContext("2d");
+            const chartData = daysOfWeek.map(day => weeklyData[day] || 0);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: daysOfWeek,
+                    datasets: [{
+                        label: "Glasses of Water",
+                        data: chartData,
+                        backgroundColor: "rgba(0, 123, 255, 0.5)",
+                        borderColor: "rgba(0, 123, 255, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 12
+                        }
                     }
-                });
-            }
+                }
+            });
         }
 
-        function startReminders() {
-            requestNotificationPermission();
-            if (Notification.permission === 'granted') {
-                clearInterval(reminderInterval); // Prevent stacking intervals
-
-                let selectedInterval = parseInt(document.getElementById('intervalSelect').value, 10);
-                reminderInterval = setInterval(() => {
-                    new Notification('Time to drink water!', {
-                        body: 'Stay hydrated and healthy!',
-                        icon: 'https://via.placeholder.com/128/00f/fff?text=Water'
-                    });
-                }, selectedInterval * 60 * 1000);
-            }
-        }
+        updateChart();
     </script>
 </body>
 </html>
