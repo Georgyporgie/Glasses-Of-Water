@@ -40,7 +40,8 @@
 
 <div class="glass-container">
     <div class="glass">
-        <div class="water-fill" id="water" </div>
+    <div class="water-fill" id="water"></div>
+
     </div>
     <p id="count"></p>
 </div>
@@ -69,21 +70,30 @@
         count = weeklyData[currentDay] || 0;
         document.getElementById("counter").textContent = count;
 
-        function increment() {
-            count++;
-            document.getElementById("counter").textContent = count;
-            weeklyData[currentDay] = count;
-            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-            updateChart();
-        }
 
-        function reset() {
-            count = 0;
-            document.getElementById("counter").textContent = count;
-            weeklyData[currentDay] = count;
-            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-            updateChart();
-        }
+
+
+
+
+function increment() {
+    count++;
+    document.getElementById("counter").textContent = count;
+    weeklyData[currentDay] = count;
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+    
+    updateGlass(); // Ensures the glass fill updates
+    updateChart(); // Updates the bar chart
+}
+
+    function reset() {
+    count = 0;
+    document.getElementById("counter").textContent = count;
+    weeklyData[currentDay] = count;
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+    updateGlass();  // Ensure water display resets
+    updateChart();  // Ensure the graph resets too
+}
+
 
         function updateChart() {
             const ctx = document.getElementById("waterChart").getContext("2d");
@@ -116,11 +126,100 @@
         updateChart();
     </script>
 
-<script>
-document.getElementById("water").style.height = "50%";
-</script>
-<script src="glasses.js"></script>
 
+
+
+
+<script>
+
+function updateGlass() {
+    let water = document.getElementById("water");
+    let counter = document.getElementById("count");
+
+    if (water && counter) {
+        let percentage = (count / 8) * 100;
+        water.style.height = percentage + "%"; // Fill the glass
+        counter.textContent = `${count} / 8 glasses`; // Update count text
+    } else {
+        console.error("Water or count element not found!");
+    }
+}
+
+
+function increment() {
+    count++;
+    
+document.getElementById("counter").textContent = count;
+    weeklyData[currentDay] = count;
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+
+    updateGlass();  // Ensures water fill updates
+    updateChart();  // Updates the chart for visual feedback
+}
+
+
+
+
+
+function reset() {
+    count = 0;
+    document.getElementById("counter").textContent = count;
+    weeklyData[currentDay] = count;
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+    updateGlass();  // Ensure water display resets
+    updateChart();
+    document.getElementById("counter").style.color = "black"; // Reset goal color
+}
+
+
+
+
+
+
+
+</script>
+
+<script>
+
+
+let chartInstance = null;
+
+function updateChart() {
+    const ctx = document.getElementById("waterChart").getContext("2d");
+
+    if (chartInstance) {
+        chartInstance.destroy();  // Remove previous instance before creating a new one
+    }
+
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: daysOfWeek,
+            datasets: [{
+                label: "Glasses of Water",
+                data: daysOfWeek.map(day => weeklyData[day] || 0),
+                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 12
+                }
+            }
+        }
+    });
+}
+
+</script>
+
+<script>
+setTimeout(updateGlass, 100);
+</script>
 
 
 </body>
