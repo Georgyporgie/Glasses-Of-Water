@@ -25,3 +25,13 @@ margin: 30px auto 30px auto; display: block;
 
 
 
+H2  {  
+
+margin: 40px 0px 40px 40px;
+}
+
+
+
+
+.balk  {  border: solid 4px black;  z-index: -400;
+}

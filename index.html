@@ -49,8 +49,43 @@
 <h2>Weekly History</h2>
 <canvas id="waterChart"></canvas>
 
+<br>
+<br>
+<br>
+    
+<p id="weeklyAverageDisplay">📊 Weekly Average: Calculating...</p>
+<br>
+<br>
+<br>
 
-    <script>
+<h5 class="balk"></h5>
+
+<h2>Hydration Trends Over Time</h2>
+<canvas id="weeklyTrendChart"></canvas>
+<br>
+<br>
+
+<h5 class="balk"></h5>
+
+
+<h2>Monthly Hydration Summary</h2>
+<div id="monthlySummary"></div>
+<br>
+<br>
+
+<h5 class="balk"></h5>
+
+<h2>Monthly Hydration Trends</h2>
+<canvas id="monthlyTrendChart"></canvas>
+<br>
+<br>
+<h5 class="balk"></h5>
+<h2>Best Hydrated Month</h2>
+<p id="bestMonthDisplay">🏆 Loading data...</p>
+
+
+
+<script>
         let count = 0;
         const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const today = new Date();
@@ -95,7 +130,62 @@ function increment() {
 }
 
 
-        function updateChart() {
+       
+
+
+let monthData = JSON.parse(localStorage.getItem("monthData")) || {};
+let todayKey = today.toISOString().split("T")[0]; // Store using YYYY-MM-DD format
+
+function increment() {
+    count++;
+    document.getElementById("counter").textContent = count;
+    monthData[todayKey] = count;
+    localStorage.setItem("monthData", JSON.stringify(monthData));
+    updateMonthlyChart();
+}
+
+
+function updateMonthlyChart() {
+    const ctx = document.getElementById("waterChart").getContext("2d");
+
+    let daysInMonth = [...Array(30).keys()].map(i => {
+        let date = new Date();
+        date.setDate(date.getDate() - i);
+        return date.toISOString().split("T")[0];
+    });
+
+    let chartData = daysInMonth.map(date => monthData[date] || 0);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: daysInMonth.reverse(),
+            datasets: [{
+                label: "Glasses of Water Per Day",
+                data: chartData,
+                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { autoSkip: true, maxTicksLimit: 10 } },
+                y: { beginAtZero: true, max: 12 }
+            }
+        }
+    });
+}
+
+
+
+
+
+
+
+
+ function updateChart() {
             const ctx = document.getElementById("waterChart").getContext("2d");
             const chartData = daysOfWeek.map(day => weeklyData[day] || 0);
 
@@ -220,6 +310,221 @@ function updateChart() {
 <script>
 setTimeout(updateGlass, 100);
 </script>
+
+
+
+<script>
+function getWeeklyTrends() {
+    let pastWeeks = JSON.parse(localStorage.getItem("pastWeeks")) || [];
+    
+    if (pastWeeks.length === 0) {
+        document.getElementById("trendSummary").innerHTML = "No historical data yet. Start tracking!";
+        return;
+    }
+
+    let totalWeeks = pastWeeks.length;
+    let avgHydration = (pastWeeks.reduce((sum, week) => sum + Object.values(week).reduce((s, val) => s + val, 0), 0) / totalWeeks).toFixed(1);
+    let bestWeek = pastWeeks.reduce((best, week) => Object.values(week).reduce((sum, val) => sum + val, 0) > best.total ? { total: Object.values(week).reduce((s, val) => s + val, 0), data: week } : best, { total: 0, data: {} });
+
+    let trendText = `📊 **Weekly Hydration Trends:**  
+    - Total weeks tracked: ${totalWeeks}  
+    - Average weekly hydration: ${avgHydration} glasses  
+    - Best hydration week: ${bestWeek.total} glasses  
+    Keep up the hydration streak! 🚀💧`;
+
+    document.getElementById("trendSummary").innerHTML = trendText;
+}
+
+
+
+
+getWeeklyTrends();
+</script>
+<script>
+function updateWeeklyTrendChart() {
+    let pastWeeks = JSON.parse(localStorage.getItem("pastWeeks")) || [];
+
+    if (pastWeeks.length === 0) {
+        document.getElementById("weeklyTrendChart").style.display = "none"; // Hide if no data
+        return;
+    }
+
+    const ctx = document.getElementById("weeklyTrendChart").getContext("2d");
+
+    let weekLabels = pastWeeks.map((_, index) => `Week ${index + 1}`);
+    let weeklyTotals = pastWeeks.map(week => Object.values(week).reduce((sum, val) => sum + val, 0));
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: weekLabels,
+            datasets: [{
+                label: "Weekly Water Intake",
+                data: weeklyTotals,
+                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(...weeklyTotals) + 5 // Auto-adjust max scale
+                }
+            }
+        }
+    });
+}
+
+// Call this function when the page loads
+updateWeeklyTrendChart();
+
+</script>
+
+
+<script>
+// Save monthly data on the first day of a new month
+const currentMonth = today.getMonth();
+if (localStorage.getItem("lastMonth") !== currentMonth.toString()) {
+    let pastMonths = JSON.parse(localStorage.getItem("pastMonths")) || [];
+    
+    // Store previous month's data
+    pastMonths.push({ month: currentMonth, data: pastWeeks });
+    localStorage.setItem("pastMonths", JSON.stringify(pastMonths));
+    
+    // Reset weekly tracking for the new month
+    localStorage.setItem("lastMonth", currentMonth.toString());
+    pastWeeks = [];
+    localStorage.setItem("pastWeeks", JSON.stringify(pastWeeks));
+}
+
+
+function getMonthlySummary() {
+    let pastMonths = JSON.parse(localStorage.getItem("pastMonths")) || [];
+
+    if (pastMonths.length === 0) {
+        document.getElementById("monthlySummary").innerHTML = "No monthly data available yet!";
+        return;
+    }
+
+    let totalMonthsTracked = pastMonths.length;
+    let avgMonthlyHydration = (pastMonths.reduce((sum, month) => sum + month.data.reduce((weekSum, week) => weekSum + Object.values(week).reduce((s, val) => s + val, 0), 0), 0) / totalMonthsTracked).toFixed(1);
+
+    let bestMonth = pastMonths.reduce((best, month) => month.data.reduce((weekSum, week) => weekSum + Object.values(week).reduce((s, val) => s + val, 0), 0) > best.total ? { total: month.data.reduce((weekSum, week) => weekSum + Object.values(week).reduce((s, val) => s + val, 0), 0), month: month.month } : best, { total: 0, month: "" });
+
+    let summaryText = `📅 **Monthly Hydration Summary:**  
+    - Months tracked: ${totalMonthsTracked}  
+    - Average monthly hydration: ${avgMonthlyHydration} glasses  
+    - Best hydration month: ${bestMonth.total} glasses in Month ${bestMonth.month}  
+    Keep up the consistency! 💧🔥`;
+
+    document.getElementById("monthlySummary").innerHTML = summaryText;
+}
+
+// Call this function on page load
+getMonthlySummary();
+
+
+</script>
+
+<script>
+function getWeeklyAverage() {
+    let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
+    let averageGlasses = (totalGlasses / 7).toFixed(1); // Rounded to one decimal place
+    
+    document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${averageGlasses} glasses/day`;
+}
+
+// Call this function after updating `weeklyData`
+getWeeklyAverage();
+
+
+</script>
+
+
+<script>
+function updateMonthlyTrendChart() {
+    let pastMonths = JSON.parse(localStorage.getItem("pastMonths")) || [];
+
+    if (pastMonths.length === 0) {
+        document.getElementById("monthlyTrendChart").style.display = "none"; // Hide if no data
+        return;
+    }
+
+    const ctx = document.getElementById("monthlyTrendChart").getContext("2d");
+
+    let monthLabels = pastMonths.map(month => `Month ${month.month + 1}`); // Convert 0-based month index
+    let monthlyTotals = pastMonths.map(month => month.data.reduce((sum, week) => sum + Object.values(week).reduce((s, val) => s + val, 0), 0));
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: "Monthly Water Intake",
+                data: monthlyTotals,
+                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(...monthlyTotals) + 10 // Auto-adjust scale
+                }
+            }
+        }
+    });
+}
+
+// Call this function on page load
+updateMonthlyTrendChart();
+
+
+
+</script>
+
+
+
+
+<script>
+
+function getBestHydrationMonth() {
+    let pastMonths = JSON.parse(localStorage.getItem("pastMonths")) || [];
+
+    if (pastMonths.length === 0) {
+        document.getElementById("bestMonthDisplay").textContent = "No data available yet!";
+        return;
+    }
+
+    let bestMonth = pastMonths.reduce((best, month) => {
+        let totalGlasses = month.data.reduce((sum, week) => sum + Object.values(week).reduce((s, val) => s + val, 0), 0);
+        return totalGlasses > best.total ? { month: month.month, total: totalGlasses } : best;
+    }, { month: "", total: 0 });
+
+    document.getElementById("bestMonthDisplay").textContent = `🏆 Best Month: ${bestMonth.month + 1} with ${bestMonth.total} glasses!`;
+}
+
+// Call this when page loads
+getBestHydrationMonth();
+
+
+</script>
+
+
+
+
+
+
+
+
+
 
 
 </body>
