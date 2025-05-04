@@ -14,7 +14,7 @@
 margin: 30px auto 30px auto; display: block;
 }
 
-.water-fill {
+#water {
     position: absolute;
     bottom: 0;
     width: 100%;
