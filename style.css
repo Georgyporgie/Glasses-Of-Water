@@ -1,3 +1,24 @@
+
+body {
+animation: softWaterFlow 16s infinite alternate;
+    background-size: 400% 400%;
+    transition: background 1s ease-in-out;
+
+}
+
+
+
+@keyframes softWaterFlow {
+    0% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
+    50% { background: linear-gradient(to right, #edf6fd, #daeaf6, #c3e2f8, #dff4ff); }
+    100% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
+}
+
+
+
+
+
+
 .glass-container {
     text-align: center;
     margin-top: 50px;
@@ -27,11 +48,21 @@ margin: 30px auto 30px auto; display: block;
 
 H2  {  
 
-margin: 40px 0px 40px 40px;
+margin: 40px 0px 40px 40px; z-index: -400; position: relative; color: #555555;font-weight: bold;text-shadow: 0.5px 0.5px 1px #999999; font-size: 20px;
+
 }
 
 
 
 
-.balk  {  border: solid 4px black;  z-index: -400;
+.balk  {  border: solid 3px #555555;  z-index: -600;
+}
+
+
+
+
+H1  {  
+
+margin: 40px 0px 40px 40px; z-index: -200; position: relative; color: #555555;font-weight: bold; font-size: 35px;
+
 }
