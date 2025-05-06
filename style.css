@@ -1,107 +1,17 @@
 
-body { 
-background: linear-gradient(90deg,Lightblue,blue);
-
-
-}
-
-
-
-
-#Neurosuite
-{
-border: solid 1px Silver;
-height:160px;
-width:210px;
-border-radius: 100px;
-padding :1px 1px 1px 1px; color:Silver;
-background-color:Silver;
-display: block;
-margin: auto auto auto auto;
-}
-
-.Playlist 
-
-{ 
-padding : 5px 5px 5px 5px; font-style :  italic;  color:Gold; text-align: center; background-color: Crimson;
-
- font-size: 19px;
- border-radius: 30px; font-weight: bold; font-family: Arial ,Helvetica,sans-serif;
-margin: 30px 30px 30px 30px;
-}
-
-
-.Session
-
-{
-
-
-font-family: Arial ,Helvetica,sans-serif;
-
-color:Black;
-margin: 5px 5px 5px 5px;
-font-weight: 400;
-font-size: 20px;
-}
-
-
-.healing {
-padding :15px 15px 15px 15px;
- border :solid 3px  silver; font-size: 25px;
-color:Lightblue; text-align: center;  font-style :  italic; background: linear-gradient(180deg,#333333,#000000); margin: -26px -8px 0px -8px; font-family: Arial ,Helvetica,sans-serif; 
-}
-
-
-.Neuro {
-padding :15px 15px 15px 15px;
-  font-size: 19px;
-color:Lightblue; text-align: center;  font-style :  italic;  background: linear-gradient(180deg,#333333,#000000); margin: -26px -8px -0px -8px;  font-family: Arial ,Helvetica,sans-serif; 
-}
-
-.fo_audio
-{
-border-radius: 30px;
-padding :4px 4px 4px 4px;
-
-color:white; text-align: center;  font-style :  italic;  background-color: silver; margin: 0 0 0 0 ;  font-family: Arial ,Helvetica,sans-serif; 
-height :40px;
-width:200px;
-}
-
-#Menu
-{
-background-color: transparent;
-border:none;
-color: white;
-padding: 3px 10px;
-text-align: center;
-text-decoration: none;
-
-font-size: 15px;
-height: 40px;
-cursor: pointer;
-float: left;
-width: 25%;
+body {
+animation: softWaterFlow 16s infinite alternate;
+    background-size: 400% 400%;
+    transition: background 1s ease-in-out;
 
 }
 
 
 
-#Home
-{
-background-color: transparent;
-border:none;
-color: white;
-padding: 3px 10px;
-text-align: center;
-text-decoration: none;
-
-font-size: 15px;
-height: 40px;
-cursor: pointer;
-float: left;
-width: 25%;
-
+@keyframes softWaterFlow {
+    0% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
+    50% { background: linear-gradient(to right, #edf6fd, #daeaf6, #c3e2f8, #dff4ff); }
+    100% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
 }
 
 
@@ -109,59 +19,50 @@ width: 25%;
 
 
 
-
-.Crime
-
-{
-
-
-font-family: Arial ,Helvetica,sans-serif;
-font-style :  italic;
-color:Crimson;
-margin: 5px 5px 5px 5px;
-
-
-}
-
-li:hover {
-  color:aliceBlue;
-
-}
-
-.phones  {  
-width: 150px; height: 75px;
-
+.glass-container {
+    text-align: center;
+    margin-top: 50px;
 }
 
 
-
-
-#startTimer {  height: 100px; width: 200px; border: solid 3px black;margin-left: 25px; 
-font-weight: 800; font-size: 25px; border-radius: 5px;
+.glass {
+    width: 100px;
+    height: 200px;
+    border: 5px solid #000;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+margin: 30px auto 30px auto; display: block;
 }
 
-
-p {  font-size:75px; margin-left: 25px;background-color: transparent; color:black;
-
-}
-
-
-#timer   {
-
-height: 100px; width: 200px; 
-font-weight: 800; font-size: 25px; display: block; margin: auto auto auto auto;
-}
-
-
-
-
-
-
-#waterAppContainer {
+.water-fill {
+    position: absolute;
+    bottom: 0;
     width: 100%;
-    height: 600px;
-    overflow-y: auto; /* Enables vertical scrolling */
-    border-radius: 10px; /* Soft edges for aesthetics */
-    background: #f5f7fa; /* Keeps it gentle */
+    height: 0%;
+    background-color: rgba(0, 123, 255, 0.7);
+    transition: height 0.5s ease-in-out;
+}
+
+
+
+H2  {  
+
+margin: 40px 0px 40px 40px; z-index: -400; position: relative; color: #555555;font-weight: bold;text-shadow: 0.5px 0.5px 1px #999999; font-size: 20px;
+
+}
+
+
+
+
+.balk  {  border: solid 3px #555555;  z-index: -600;
+}
+
+
+
+
+H1  {  
+
+margin: 40px 0px 40px 40px; z-index: -200; position: relative; color: #555555;font-weight: bold; font-size: 25px;
 
 }
