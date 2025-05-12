@@ -1,6 +1,8 @@
 
 body {
-background-color: transparent;
+animation: softWaterFlow 16s infinite alternate;
+    background-size: 400% 400%;
+    transition: background 1s ease-in-out;
 }
 
 
