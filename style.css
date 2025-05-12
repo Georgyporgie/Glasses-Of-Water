@@ -1,18 +1,8 @@
 
 body {
-animation: softWaterFlow 16s infinite alternate;
-    background-size: 400% 400%;
-    transition: background 1s ease-in-out;
-}
+background-color: transparent;
 
-
-
-@keyframes softWaterFlow {
-    0% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
-    50% { background: linear-gradient(to right, #edf6fd, #daeaf6, #c3e2f8, #dff4ff); }
-    100% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
-}
-
+} 
 
 
 
