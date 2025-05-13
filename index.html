@@ -57,6 +57,12 @@
 <br>
 <br>
 <br>
+<div id="dailyAverage">Daily Average: --</div>
+<br>
+<br>
+<br>
+
+
 
 <h5 class="balk"></h5>
 
@@ -519,13 +525,25 @@ getBestHydrationMonth();
 
 </script>
 
+<script>
 
 
+function logGlass() {
+    count++; 
+    weeklyData[currentDay] = count; 
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData)); 
+    document.getElementById("counter").textContent = count; 
 
+    getDailyAverage(); // Update the daily average after logging a glass
+}
 
-
-
-
+</script>
+<script>
+console.log("Weekly Data:", weeklyData);
+console.log("Total Glasses:", totalGlasses);
+console.log("Days Tracked:", daysTracked);
+console.log("Average Daily Hydration:", avgDaily);
+</script>
 
 
 
