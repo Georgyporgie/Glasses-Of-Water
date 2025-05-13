@@ -706,9 +706,17 @@ function getFromStorage(key) {
 
 </script>
 
+<script>
+function cleanOldData() {
+    let pastMonths = getFromStorage("pastMonths");
+    let cutoffDate = new Date();
+    cutoffDate.setMonth(cutoffDate.getMonth() - 3);
 
+    pastMonths = pastMonths.filter(month => new Date(month.monthDate) >= cutoffDate);
+    saveToStorage("pastMonths", pastMonths);
+}
 
-
+</script>
 
 </body>
 </html>
