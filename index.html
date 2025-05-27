@@ -571,16 +571,16 @@ getMonthlySummary();
 </script>
 
 <script>
-function getWeeklyAverage() {
+function logGlass() {
     let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
     let averageGlasses = (totalGlasses / 7).toFixed(1); // Rounded to one decimal place
     
     document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${averageGlasses} glasses/day`;
-}
+
 
 // Call this function after updating `weeklyData`
 getWeeklyAverage ();
-
+}
 </script>
 
 
