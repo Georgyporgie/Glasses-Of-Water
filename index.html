@@ -30,7 +30,7 @@
     </style>
 </head>
 
-</head>
+
 <body>
 
     <h1>Weekly Water Tracker</h1>
@@ -69,7 +69,15 @@
     <div id="trendSummary"></div>
     <canvas id="trendChart"></canvas>
 
-    <script>
+   
+
+
+
+
+
+
+
+ <script>
         let todayKey = new Date().toISOString().split("T")[0]; // Store using YYYY-MM-DD format
         let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
 
@@ -81,12 +89,40 @@
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
             document.getElementById("counter").textContent = count;
+            updateGlass(); 
             updateCharts();
             getDailyAverage();
             getWeeklyAverage();
-        }
+          
+}
 
-        function reset() {
+       
+
+
+function updateGlass() {
+    let water = document.getElementById("water");
+    let counter = document.getElementById("count");
+
+    if (water && counter) {
+        let maxGlasses = 8; // Define the max number of glasses for a full glass
+        let percentage = (count / maxGlasses) * 100;
+
+        water.style.height = `${percentage}%`; // Fill the glass dynamically
+        water.style.transition = "height 0.5s ease-in-out"; // Add smooth animation
+        counter.textContent = `${count} / ${maxGlasses} glasses`; // Update counter display
+    } else {
+        console.error("Water or count element not found!");
+    }
+}
+
+
+
+
+
+
+
+
+ function reset() {
             count = 0;
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
@@ -135,6 +171,8 @@
         getDailyAverage();
         getWeeklyAverage();
         updateCharts();
-    </script>
+ 
+
+</script>
 </body>
 </html>
