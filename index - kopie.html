@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydration Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        
+
+}
+        .counter {
+            font-size: 2em;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+        }
+        canvas {
+            max-width: 80%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+</head>
+<body>
+
+    <h1>Weekly Water Tracker</h1>
+    <p>How many glasses of water have you had today?</p>
+    <div class="counter" id="counter">0</div>
+    <button onclick="logGlass()">Add a Glass</button>
+    <button onclick="reset()">Reset</button>
+
+    
+
+<div class="glass-container">
+    <div class="glass">
+    <div class="water-fill" id="water"></div>
+
+    </div>
+    <p id="count"></p>
+</div>
+
+
+
+
+
+
+
+<h2>Weekly History</h2>
+    <canvas id="waterChart"></canvas>
+<br>
+<br>
+
+<p id="dailyAverage">📊 Daily Average: --</p>
+    
+<br>
+<br>
+
+    
+    <div id="trendSummary"></div>
+    <canvas id="trendChart"></canvas>
+
+    <script>
+        let todayKey = new Date().toISOString().split("T")[0]; // Store using YYYY-MM-DD format
+        let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
+
+        let count = weeklyData[todayKey] || 0;
+        document.getElementById("counter").textContent = count;
+
+        function logGlass() {
+            count++;
+            weeklyData[todayKey] = count;
+            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+            document.getElementById("counter").textContent = count;
+            updateCharts();
+            getDailyAverage();
+            getWeeklyAverage();
+        }
+
+        function reset() {
+            count = 0;
+            weeklyData[todayKey] = count;
+            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+            document.getElementById("counter").textContent = count;
+            updateCharts();
+        }
+
+        function getDailyAverage() {
+            let totalGlasses = Object.values(weeklyData).reduce((sum, num) => sum + num, 0);
+            let daysTracked = Object.values(weeklyData).filter(num => num > 0).length;
+
+            let avgDaily = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(2) : 0;
+            document.getElementById("dailyAverage").textContent = `Daily Average: ${avgDaily} glasses`;
+        }
+
+        function getWeeklyAverage() {
+            let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
+            let weeklyAvg = (totalGlasses / 7).toFixed(1);
+            document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
+        }
+
+        function updateCharts() {
+            const ctx = document.getElementById("waterChart").getContext("2d");
+            const chartData = Object.keys(weeklyData).map(date => weeklyData[date] || 0);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(weeklyData),
+                    datasets: [{
+                        label: "Glasses of Water",
+                        data: chartData,
+                        backgroundColor: "rgba(0, 123, 255, 0.5)",
+                        borderColor: "rgba(0, 123, 255, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 12 } }
+                }
+            });
+        }
+
+        // Initial calculations on page load
+        getDailyAverage();
+        getWeeklyAverage();
+        updateCharts();
+    </script>
+</body>
+</html>
