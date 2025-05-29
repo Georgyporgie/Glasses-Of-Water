@@ -67,12 +67,12 @@ margin: 40px 0px 40px 40px; z-index: -200; position: relative; color: #555555;fo
 
 }
 
-
-
+.wator { color: #1d1c1c; z-index: 200;
+       }
 #dailyAverage   {
 
 
-text-decoration: underline #FF0000;   color:black ; z-index: 200;
+text-decoration: underline #FF0000;   color:white ; z-index: 300;
 font-style: bold; font-size: 20px;
 }
 
