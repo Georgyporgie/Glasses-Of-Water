@@ -70,7 +70,7 @@ margin: 40px 0px 40px 5px; z-index: -200; position: relative; color: #555555;fon
 .wator { color: #1d1c1c; z-index: 200;
        }
 #dailyAverage   {
-
+font-family: Lucida handwriting;
 
 text-decoration: underline #FF0000;   color:#1c1d1d; z-index: 300;
 font-style: bold; font-size: 20px;
