@@ -48,7 +48,7 @@ margin: 30px auto 30px auto; display: block;
 
 H2  {  
 
-margin: 40px 0px 40px 40px; z-index: -400; position: relative; color: #555555;font-weight: bold;text-shadow: 0.5px 0.5px 1px #999999; font-size: 20px;
+margin: 40px 0px 40px 5px; z-index: -400; position: relative; color: #555555;font-weight: bold;text-shadow: 0.5px 0.5px 1px #999999; font-size: 20px;
 
 }
 
