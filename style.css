@@ -1,18 +1,20 @@
-
 body {
-animation: softWaterFlow 16s infinite alternate;
+    animation: softWaterFlow 16s infinite alternate;
     background-size: 400% 400%;
+    background-position: center;
     transition: background 1s ease-in-out;
-
+background-color:#fff;
 }
 
 
 
 @keyframes softWaterFlow {
-    0% { background: linear-gradient(to right, transparent, #dbeafe, #cce8ff, #e3f4ff); }
-    50% { background: linear-gradient(to right, #edf6fd, #daeaf6, #c3e2f8, #dff4ff); }
-    100% { background: linear-gradient(to right, #f5f7fa, #dbeafe, #cce8ff, #e3f4ff); }
+    0% { background-position: 0% 50%; opacity: 0.9; }
+    50% { background-position: 100% 50%; opacity: 1; }
+    100% { background-position: 0% 50%; opacity: 0.9; }
 }
+
+
 
 
 
@@ -33,6 +35,10 @@ animation: softWaterFlow 16s infinite alternate;
     position: relative;
     overflow: hidden;
 margin: 30px auto 30px auto; display: block;
+    overflow: hidden;
+    position: relative;
+
+
 }
 
 .water-fill {
@@ -40,9 +46,16 @@ margin: 30px auto 30px auto; display: block;
     bottom: 0;
     width: 100%;
     height: 0%;
-    background-color: rgba(0, 123, 255, 0.7);
-    transition: height 0.5s ease-in-out;
+    background: linear-gradient(to top, rgba(0, 123, 255, 0.7), rgba(0, 123, 255, 0.5));
+    transition: height 2s ease-out;
 }
+
+@keyframes waterWave {
+    0% { transform: translateY(2px); }
+    50% { transform: translateY(-2px); }
+    100% { transform: translateY(2px); }
+}
+
 
 
 
@@ -73,7 +86,7 @@ margin: 40px 0px 40px 5px; z-index: -200; position: relative; color: #555555;fon
 
 
 text-decoration: underline #FF0000;   color:#1c1d1d; z-index: -200;
-font-style: bold; font-size: 20px;
+font-weight: bold; font-size: 20px;
 }
 
 
@@ -85,3 +98,11 @@ font-style: bold; font-size: 20px;
 .ml{  color:white;
 
    }
+
+
+#weeklyAverageDisplay    {
+
+
+ color:#1c1d1d; z-index: -200;
+font-weight: bold; font-size: 15px;
+}

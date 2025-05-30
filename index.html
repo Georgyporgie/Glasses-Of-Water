@@ -11,7 +11,8 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
-        
+        background: linear-gradient(to bottom, #93c5fd, #dbeafe, #f0f9ff);
+
 
 }
         .counter {
@@ -179,7 +180,37 @@ function updateGlass() {
         getWeeklyAverage();
         updateCharts();
  
+</script>
+
+<script>
+window.onload = function() {
+    let todayKey = new Date().toISOString().split("T")[0];
+    let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
+    let count = weeklyData[todayKey] || 0;
+
+    document.getElementById("counter").textContent = count;
+
+    // Ensure the water-fill level updates correctly
+    let water = document.getElementById("water");
+    let maxGlasses = 8;
+    let percentage = (count / maxGlasses) * 100;
+
+    if (water) {
+        water.style.height = `${percentage}%`;
+        water.style.transition = "height 0.5s ease-in-out";
+    }
+
+    getDailyAverage();
+    getWeeklyAverage();
+    updateCharts();
+};
+
 
 </script>
+
+
+
+
+
 </body>
 </html>
