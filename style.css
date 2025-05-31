@@ -85,7 +85,7 @@ margin: 40px 0px 40px 5px; z-index: -200; position: relative; color: #555555;fon
 #dailyAverage   {
 
 
-text-decoration: underline #FF0000;   color:#1c1d1d; z-index: -200;
+text-decoration: underline #FF0026;   color:#1c1d1d; z-index: -200;
 font-weight: bold; font-size: 20px;
 }
 
@@ -104,5 +104,5 @@ font-weight: bold; font-size: 20px;
 
 
  color:#1c1d1d; z-index: -200;
-font-weight: bold; font-size: 15px;
+font-weight: bold; font-size: 17px;
 }
