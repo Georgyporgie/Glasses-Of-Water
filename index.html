@@ -152,28 +152,35 @@ function updateGlass() {
             document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
         }
 
-        function updateCharts() {
-            const ctx = document.getElementById("waterChart").getContext("2d");
-            const chartData = Object.keys(weeklyData).map(date => weeklyData[date] || 0);
+function updateCharts() {
+    const ctx = document.getElementById("waterChart").getContext("2d");
+    const chartData = Object.keys(weeklyData).map(date => weeklyData[date] || 0);
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(weeklyData),
-                    datasets: [{
-                        label: "Glasses of Water",
-                        data: chartData,
-                        backgroundColor: "rgba(0, 123, 255, 0.5)",
-                        borderColor: "rgba(0, 123, 255, 1)",
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: { y: { beginAtZero: true, max: 12 } }
-                }
-            });
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const labels = Object.keys(weeklyData).map(date => {
+        let day = new Date(date).getDay();
+        return daysOfWeek[day]; 
+    });
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Glasses of Water",
+                data: chartData,
+                backgroundColor: "rgba(0, 123, 255, 0.5)",
+                borderColor: "rgba(0, 123, 255, 1)",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, max: 12 } }
         }
+    });
+}
+
 
         // Initial calculations on page load
         getDailyAverage();
@@ -207,9 +214,28 @@ window.onload = function() {
 
 
 </script>
+<script>
+function checkReset() {
+    let today = new Date();
+    let dayOfWeek = today.getDay(); // Sunday is 0
 
+    if (dayOfWeek === 0) { // If it's Sunday, reset weekly data
+        weeklyData = {}; 
+        localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+        document.getElementById("counter").textContent = 0;
+        updateCharts();
+    }
+}
 
+// Call this function on page load
+window.onload = function() {
+    checkReset(); 
+    getDailyAverage();
+    getWeeklyAverage();
+    updateCharts();
+};
 
+</script>
 
 
 </body>
