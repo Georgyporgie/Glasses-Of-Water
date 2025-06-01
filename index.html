@@ -92,36 +92,42 @@
         let count = weeklyData[todayKey] || 0;
         document.getElementById("counter").textContent = count;
 
-        function logGlass() {
+        
+
+
+
+
+function logGlass() {
             count++;
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
             document.getElementById("counter").textContent = count;
             updateGlass(); 
             updateCharts();
-            getDailyAverage();
             getWeeklyAverage();
+getDailyAverage();
+            
+
           
 }
 
        
-
 
 function updateGlass() {
     let water = document.getElementById("water");
     let counter = document.getElementById("count");
 
     if (water && counter) {
-        let maxGlasses = 8; // Define the max number of glasses for a full glass
-        let percentage = (count / maxGlasses) * 100;
-
-        water.style.height = `${percentage}%`; // Fill the glass dynamically
-        water.style.transition = "height 0.5s ease-in-out"; // Add smooth animation
-        counter.textContent = `${count} / ${maxGlasses} glasses`; // Update counter display
+        let percentage = (count / 8) * 100;
+        water.style.height = percentage + "%"; // Fill the glass
+        counter.textContent = `${count} / 8 glasses`; // Ensures display starts correctly
     } else {
         console.error("Water or count element not found!");
     }
+ updateGlass(); 
+
 }
+
 
 
 
@@ -191,26 +197,28 @@ function updateCharts() {
 
 <script>
 window.onload = function() {
-    let todayKey = new Date().toISOString().split("T")[0];
+    let todayKey = new Date().toISOString().split("T")[0]; 
     let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
+
+    checkReset(); 
+
     let count = weeklyData[todayKey] || 0;
 
-    document.getElementById("counter").textContent = count;
-
-    // Ensure the water-fill level updates correctly
-    let water = document.getElementById("water");
-    let maxGlasses = 8;
-    let percentage = (count / maxGlasses) * 100;
-
-    if (water) {
-        water.style.height = `${percentage}%`;
-        water.style.transition = "height 0.5s ease-in-out";
+    let counterElement = document.getElementById("counter");
+    
+    if (count > 0) {
+        counterElement.textContent = count; 
+        counterElement.style.visibility = "visible"; 
+    } else {
+        counterElement.style.visibility = "hidden"; 
     }
 
+    updateGlass();
     getDailyAverage();
     getWeeklyAverage();
     updateCharts();
 };
+
 
 
 </script>
@@ -229,13 +237,27 @@ function checkReset() {
 
 // Call this function on page load
 window.onload = function() {
-    checkReset(); 
-    getDailyAverage();
+       updateGlass();    
+checkReset(); 
+   
     getWeeklyAverage();
-    updateCharts();
+    getDailyAverage();
+
+updateCharts();
+
+
+
 };
 
 </script>
+
+<script>
+
+
+
+
+
+
 
 
 </body>
