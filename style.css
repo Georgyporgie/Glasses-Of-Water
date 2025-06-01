@@ -16,14 +16,17 @@ background-color:#fff;
 
 
 
-
+@font-face{ 
+font-family: myStats;
+src:url(fonts/Squares Bold.otf);
+}
 
 
 
 
 .glass-container {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 50px; 
 }
 
 
@@ -83,8 +86,8 @@ margin: 40px 0px 40px 5px; z-index: -200; position: relative; color: #555555;fon
 .wator { color: #1d1c1c; z-index: 200;
        }
 #dailyAverage   {
-
- color:#1c1d1d; z-index: -200; margin-left: 25px; 
+font-family: myStats;
+ color:#1c1d1d; z-index: -200; margin-left: 30px; 
 font-weight: bold; font-size: 20px;
 }
 
@@ -100,7 +103,7 @@ font-weight: bold; font-size: 20px;
 
 
 #weeklyAverageDisplay    {
-
+font-family: myStats;
  
  color:#1c1d1d; z-index: -400; margin-bottom: -20px; font-size: 20px;
 }
