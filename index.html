@@ -158,7 +158,7 @@ function updateGlass() {
             let daysTracked = Object.values(weeklyData).filter(num => num > 0).length;
 
             let avgDaily = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(2) : 0;
-            document.getElementById("dailyAverage").textContent = `📊Daily Average: ${avgDaily} glasses`;
+            document.getElementById("dailyAverage").textContent = `📊 Daily Average: ${avgDaily} glasses`;
         }
 
         function getWeeklyAverage() {
