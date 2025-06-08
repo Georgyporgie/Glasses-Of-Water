@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hydration Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="style.css">
- <style>
+    <link rel="stylesheet" href="style.css">
+    <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
-        background: linear-gradient(to bottom, #93c5fd, #dbeafe, #f0f9ff);
-
-
-}
+            background: linear-gradient(to bottom, #93c5fd, #dbeafe, #f0f9ff);
+        }
         .counter {
             font-size: 2em;
             margin: 20px;
@@ -31,7 +29,6 @@
     </style>
 </head>
 
-
 <body>
 
     <h1 class="wator">Weekly Water Tracker</h1>
@@ -40,112 +37,68 @@
     <button onclick="logGlass()">Add a Glass</button>
     <button onclick="reset()">Reset</button>
 
-    
-
-<div class="glass-container">
-    <div class="glass">
-    <div class="water-fill" id="water"></div>
-
+    <div class="glass-container">
+        <div class="glass">
+            <div class="water-fill" id="water"></div>
+        </div>
+        <p id="count"></p>
+        <p class="ml"> 300 ml.</p>
     </div>
-    <p id="count"></p>
-<p class="ml"> 300 ml.</p>
 
-</div>
+    <br><br>
 
+    <h2> Recent History</h2>
+        <br><br>
+ <canvas id="waterChart"></canvas>
+    <br><br>
+<canvas id="weeklyChart"></canvas>
+       <br><br>
+ <canvas id="monthlyChart"></canvas>
 
-
-<br>
+    <br><br>
+     <p id="dailyAverage">📊 Daily Average: --</p>
     <br>
+     <p id="weeklyAverageDisplay">📊 Weekly Average: --</p>
+    <br><br>
+    <p id="monthlyAverageDisplay">📊 Monthly Average: --</p>
 
-
-
-<h2>Weekly History</h2>
-   
-    
-    
-    <canvas id="waterChart"></canvas>
-<br>
-<br>
-
-<p id="weeklyAverageDisplay">📊 weekly average: --</p>
-    
-<br>
-
-<p id="dailyAverage">📊 daily average: --</p>
-<br>
-<br>    
- 
-   
-
-
-
-
-
-
-<div id="trendSummary"></div>
-    <canvas id="trendChart"></canvas>
-
-   
-
-
-
-
-
-
-
- <script>
-        let todayKey = new Date().toISOString().split("T")[0]; // Store using YYYY-MM-DD format
+    <script>
+        let todayKey = new Date().toISOString().split("T")[0];
         let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
+        let monthlyData = JSON.parse(localStorage.getItem("monthlyData")) || {};
 
         let count = weeklyData[todayKey] || 0;
         document.getElementById("counter").textContent = count;
 
-        let monthlyData = JSON.parse(localStorage.getItem("monthlyData")) || {};
+        console.log("Monthly Data:", monthlyData);
 
+        function logGlass() {
+            count++;
+            weeklyData[todayKey] = count;
+            monthlyData[todayKey] = count;
+            localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+            localStorage.setItem("monthlyData", JSON.stringify(monthlyData));
+            document.getElementById("counter").textContent = count;
+            updateGlass();
+            updateCharts();
+            getWeeklyAverage();
+            getMonthlyAverage();
+            getDailyAverage();
+        }
 
+        function updateGlass() {
+            let water = document.getElementById("water");
+            let counter = document.getElementById("count");
+            if (water && counter) {
+                let percentage = (count / 8) * 100;
+                water.style.height = percentage + "%";
+                counter.textContent = `${count} / 8 glasses`;
+            } else {
+                console.error("Water or count element not found!");
+            }
+        }
 
-
-
-function logGlass() {
-    count++;
-    weeklyData[todayKey] = count;  
-    monthlyData[todayKey] = count;  
-    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-    localStorage.setItem("monthlyData", JSON.stringify(monthlyData));
-    document.getElementById("counter").textContent = count;
-    updateGlass(); 
-    updateCharts(); 
-    getWeeklyAverage();
-    
-}
-
-
-       
-
-function updateGlass() {
-    let water = document.getElementById("water");
-    let counter = document.getElementById("count");
-
-    if (water && counter) {
-        let percentage = (count / 8) * 100;
-        water.style.height = percentage + "%"; // Fill the glass
-        counter.textContent = `${count} / 8 glasses`; // Ensures display starts correctly
-    } else {
-        console.error("Water or count element not found!");
-    }
- 
-
-}
-
-
-
-
-
-
-
-
-
- function reset() {
+        function reset() {
             count = 0;
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
@@ -156,7 +109,6 @@ function updateGlass() {
         function getDailyAverage() {
             let totalGlasses = Object.values(weeklyData).reduce((sum, num) => sum + num, 0);
             let daysTracked = Object.values(weeklyData).filter(num => num > 0).length;
-
             let avgDaily = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(2) : 0;
             document.getElementById("dailyAverage").textContent = `📊 Daily Average: ${avgDaily} glasses`;
         }
@@ -167,120 +119,97 @@ function updateGlass() {
             document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
         }
 
+        function getMonthlyAverage() {
+            let totalGlasses = Object.values(monthlyData).reduce((sum, val) => sum + val, 0);
+            let daysTracked = Object.keys(monthlyData).length;
+            let monthlyAvg = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(1) : "0.0";
+            document.getElementById("monthlyAverageDisplay").textContent = `📊 Monthly Average: ${monthlyAvg} glasses/day`;
+        }
 
+        function checkReset() {
+            let today = new Date();
+            let dayOfMonth = today.getDate();
+            let dayOfWeek = today.getDay();
 
+            if (dayOfMonth === 1) { 
+                monthlyData = {};
+                localStorage.setItem("monthlyData", JSON.stringify(monthlyData));
+                document.getElementById("monthlyAverageDisplay").textContent = `📊 Monthly Average: 0 glasses/day`;
+            }
 
+            if (dayOfWeek === 0) { 
+                weeklyData = {};
+                localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+                document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: 0 glasses/day`;
+            }
+        }
 
-
-
-
-
+       let weeklyChartInstance = null;
+let monthlyChartInstance = null;
+let waterChartInstance = null; // Add instance for the water chart
 
 function updateCharts() {
-    const ctx = document.getElementById("waterChart").getContext("2d");
-    const chartData = Object.keys(weeklyData).map(date => weeklyData[date] || 0);
+    const ctxWeekly = document.getElementById("weeklyChart")?.getContext("2d");
+    const ctxMonthly = document.getElementById("monthlyChart")?.getContext("2d");
+    const ctxWater = document.getElementById("waterChart")?.getContext("2d"); // Add this
 
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const labels = Object.keys(weeklyData).map(date => {
-        let day = new Date(date).getDay();
-        return daysOfWeek[day]; 
-    });
+    if (!ctxWeekly || !ctxMonthly || !ctxWater) {
+        console.error("One or more canvas elements not found!");
+        return;
+    }
 
-    new Chart(ctx, {
+    if (weeklyChartInstance) weeklyChartInstance.destroy();
+    if (monthlyChartInstance) monthlyChartInstance.destroy();
+    if (waterChartInstance) waterChartInstance.destroy(); // Destroy the previous water chart
+
+    weeklyChartInstance = new Chart(ctxWeekly, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: Object.keys(weeklyData),
             datasets: [{
-                label: "Glasses of Water",
-                data: chartData,
+                label: "Weekly Water Intake",
+                data: Object.values(weeklyData),
+                backgroundColor: "rgba(0, 200, 100, 0.5)",
+                borderColor: "rgba(0, 200, 100, 1)",
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 12 } } }
+    });
+
+    monthlyChartInstance = new Chart(ctxMonthly, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(monthlyData),
+            datasets: [{
+                label: "Monthly Water Intake",
+                data: Object.values(monthlyData),
                 backgroundColor: "rgba(0, 123, 255, 0.5)",
                 borderColor: "rgba(0, 123, 255, 1)",
                 borderWidth: 1
             }]
         },
-        options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true, max: 12 } }
-        }
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 12 } } }
+    });
+
+    // 🎉 **Add Water Intake Chart**
+    waterChartInstance = new Chart(ctxWater, {
+        type: 'doughnut',
+        data: {
+            labels: ["Water Consumed", "Remaining"],
+            datasets: [{
+                label: "Water Intake",
+                data: [count, 8 - count], // Current water intake vs remaining
+                backgroundColor: ["rgba(0, 123, 255, 0.5)", "rgba(200, 200, 200, 0.5)"],
+                borderColor: ["rgba(0, 123, 255, 1)", "rgba(200, 200, 200, 1)"],
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true }
     });
 }
 
-
-        // Initial calculations on page load
-        getDailyAverage();
-        getWeeklyAverage();
-        updateCharts();
- 
-</script>
-
-<script>
-window.onload = function() {
-    let todayKey = new Date().toISOString().split("T")[0]; 
-    let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
-
-    checkReset(); 
-
-    let count = weeklyData[todayKey] || 0;
-
-    let counterElement = document.getElementById("counter");
-    
-    if (count > 0) {
-        counterElement.textContent = count; 
-        counterElement.style.visibility = "visible"; 
-    } else {
-        counterElement.style.visibility = "hidden"; 
-    }
-
-    updateGlass();
-    getDailyAverage();
-    getWeeklyAverage();
-    updateCharts();
-};
-
-
-
-</script>
-<script>
-function checkReset() {
-    let today = new Date();
-    let dayOfMonth = today.getDate(); // Get the current day (1-31)
-
-    if (dayOfMonth === 1) { // If it's the first day of the month, reset monthly data
-        monthlyData = {}; 
-        localStorage.setItem("monthlyData", JSON.stringify(monthlyData));
-        document.getElementById("monthlyAverageDisplay").textContent = `📊 Monthly Average: 0 glasses/day`;
-    }
-
-    // Keep your existing weekly reset logic
-    let dayOfWeek = today.getDay(); // Sunday is 0
-    if (dayOfWeek === 0) { // If it's Sunday, reset weekly data
-        weeklyData = {};
-        localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-        document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: 0 glasses/day`;
-    }
-}
-
-
-// Call this function on page load
-window.onload = function() {
-    checkReset();  
-    updateGlass();
-    getWeeklyAverage();
-   
-    updateCharts();
-};
-
-
-</script>
-
-
-
-
-
-
-
-
-
+    </script>
 
 </body>
 </html>
