@@ -95,10 +95,17 @@
                 counter.textContent = `${count} / 8 glasses`;
             } else {
                 console.error("Water or count element not found!");
-            }
-        }
+            
+}
+         
+}
 
-        function reset() {
+   updateGlass();   
+  
+
+
+
+function reset() {
             count = 0;
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
