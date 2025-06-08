@@ -119,13 +119,22 @@ function reset() {
             let avgDaily = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(2) : 0;
             document.getElementById("dailyAverage").textContent = `📊 Daily Average: ${avgDaily} glasses`;
         }
-
+getDailyAverage();
+       
+        
+        
+        
+        
         function getWeeklyAverage() {
             let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
             let weeklyAvg = (totalGlasses / 7).toFixed(1);
             document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
         }
 
+     getWeeklyAverage(); 
+        
+        
+        
         function getMonthlyAverage() {
             let totalGlasses = Object.values(monthlyData).reduce((sum, val) => sum + val, 0);
             let daysTracked = Object.keys(monthlyData).length;
@@ -133,6 +142,10 @@ function reset() {
             document.getElementById("monthlyAverageDisplay").textContent = `📊 Monthly Average: ${monthlyAvg} glasses/day`;
         }
 
+        getMonthlyAverage();
+        
+        
+        
         function checkReset() {
             let today = new Date();
             let dayOfMonth = today.getDate();
