@@ -57,9 +57,9 @@
 
     <br><br>
      <p id="dailyAverage">📊 Daily Average: --</p>
-    
-     
-    <br><br>
+  
+
+    <br>
     <p id="monthlyAverageDisplay">📊 Monthly Average: --</p>
 
     <script>
@@ -125,13 +125,7 @@ getDailyAverage();
         
         
         
-        function getWeeklyAverage() {
-            let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
-            let weeklyAvg = (totalGlasses / 7).toFixed(1);
-            document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
-        }
 
-     getWeeklyAverage(); 
         
         
         
@@ -160,7 +154,7 @@ getDailyAverage();
             if (dayOfWeek === 0) { 
                 weeklyData = {};
                 localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-                document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: 0 glasses/day`;
+                document.getElementById("weeklyAverageDisplay").textContent = ` `;
             }
         }
 
