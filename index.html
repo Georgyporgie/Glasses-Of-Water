@@ -138,7 +138,14 @@ getDailyAverage();
 
         getMonthlyAverage();
         
-        
+        function getWeeklyAverage() {
+    let values = Object.values(weeklyData);
+    let total = values.reduce((sum, num) => sum + num, 0);
+    let daysTracked = values.filter(val => val > 0).length;
+    let weeklyAvg = daysTracked > 0 ? (total / daysTracked).toFixed(2) : 0;
+    document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
+}
+
         
         function checkReset() {
             let today = new Date();
