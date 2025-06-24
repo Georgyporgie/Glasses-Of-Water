@@ -47,7 +47,7 @@
 
     <br><br>
 
-    <h2>Weekly History</h2>
+    <h2> Recent History</h2>
         <br><br>
  <canvas id="waterChart"></canvas>
     <br><br>
@@ -56,13 +56,35 @@
  <canvas id="monthlyChart"></canvas>
 
     <br><br>
+     <p id="dailyAverage">📊 Daily Average: --</p>
+  
+
+    <br>
     <p id="weeklyAverageDisplay">📊 Weekly Average: --</p>
-    <br>
-    <p id="dailyAverage">📊 Daily Average: --</p>
-    <br>
+
+
+<br><br>
+
+
+
+<br>
     <p id="monthlyAverageDisplay">📊 Monthly Average: --</p>
 
-    <script>
+    
+
+
+
+    <br><br>
+    <br><br>
+  <br><br>
+
+<button onclick="clearWeeklyChart()">Clear Weekly Chart</button>
+
+
+    <br><br>
+
+
+<script>
         let todayKey = new Date().toISOString().split("T")[0];
         let weeklyData = JSON.parse(localStorage.getItem("weeklyData")) || {};
         let monthlyData = JSON.parse(localStorage.getItem("monthlyData")) || {};
@@ -95,10 +117,17 @@
                 counter.textContent = `${count} / 8 glasses`;
             } else {
                 console.error("Water or count element not found!");
-            }
-        }
+            
+}
+         
+}
 
-        function reset() {
+   updateGlass();   
+  
+
+
+
+function reset() {
             count = 0;
             weeklyData[todayKey] = count;
             localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
@@ -112,13 +141,23 @@
             let avgDaily = daysTracked > 0 ? (totalGlasses / daysTracked).toFixed(2) : 0;
             document.getElementById("dailyAverage").textContent = `📊 Daily Average: ${avgDaily} glasses`;
         }
-
+getDailyAverage();
+       
+        
+        
+        
         function getWeeklyAverage() {
-            let totalGlasses = Object.values(weeklyData).reduce((sum, val) => sum + val, 0);
-            let weeklyAvg = (totalGlasses / 7).toFixed(1);
-            document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
-        }
+    let values = Object.values(weeklyData);
+    let total = values.reduce((sum, num) => sum + num, 0);
+    let daysTracked = values.filter(val => val > 0).length;
+    let weeklyAvg = daysTracked > 0 ? (total / daysTracked).toFixed(2) : 0;
+    document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: ${weeklyAvg} glasses/day`;
+}
 
+        getWeeklyAverage();
+        
+        
+        
         function getMonthlyAverage() {
             let totalGlasses = Object.values(monthlyData).reduce((sum, val) => sum + val, 0);
             let daysTracked = Object.keys(monthlyData).length;
@@ -126,6 +165,10 @@
             document.getElementById("monthlyAverageDisplay").textContent = `📊 Monthly Average: ${monthlyAvg} glasses/day`;
         }
 
+        getMonthlyAverage();
+        
+        
+        
         function checkReset() {
             let today = new Date();
             let dayOfMonth = today.getDate();
@@ -140,7 +183,7 @@
             if (dayOfWeek === 0) { 
                 weeklyData = {};
                 localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
-                document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: 0 glasses/day`;
+                document.getElementById("weeklyAverageDisplay").textContent = ` `;
             }
         }
 
@@ -208,8 +251,43 @@ function updateCharts() {
         options: { responsive: true }
     });
 }
+updateCharts();
+    
 
-    </script>
+
+function clearWeeklyChart() {
+    weeklyData = {};
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+    updateCharts();
+    getWeeklyAverage();
+    getDailyAverage();
+    document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: --`;
+}
+
+
+
+checkReset();
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<br><br>
+<br><br>
+
+<br><br>
+
+
+
+
 
 </body>
 </html>

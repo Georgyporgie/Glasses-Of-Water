@@ -74,11 +74,14 @@
 
 
 
+    <br><br>
+    <br><br>
+  <br><br>
+
+<button onclick="clearWeeklyChart()">Clear Weekly Chart</button>
 
 
-
-
-
+    <br><br>
 
 
 <script>
@@ -249,7 +252,32 @@ function updateCharts() {
     });
 }
 updateCharts();
-    </script>
+    
+
+
+function clearWeeklyChart() {
+    weeklyData = {};
+    localStorage.setItem("weeklyData", JSON.stringify(weeklyData));
+    updateCharts();
+    getWeeklyAverage();
+    getDailyAverage();
+    document.getElementById("weeklyAverageDisplay").textContent = `📊 Weekly Average: --`;
+}
+
+
+
+checkReset();
+
+
+
+
+
+
+
+
+
+
+</script>
 
 
 <br><br>
