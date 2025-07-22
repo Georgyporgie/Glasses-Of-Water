@@ -53,7 +53,7 @@
     <br><br>
 <canvas id="weeklyChart"></canvas>
        <br><br>
- 
+ <canvas id="monthlyChart"></canvas>
 
     <br><br>
      <p id="dailyAverage">📊 Daily Average: --</p>
@@ -220,20 +220,7 @@ function updateCharts() {
         options: { responsive: true, scales: { y: { beginAtZero: true, max: 12 } } }
     });
 
-    monthlyChartInstance = new Chart(ctxMonthly, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(monthlyData),
-            datasets: [{
-                label: "Monthly Water Intake",
-                data: Object.values(monthlyData),
-                backgroundColor: "rgba(0, 123, 255, 0.5)",
-                borderColor: "rgba(0, 123, 255, 1)",
-                borderWidth: 1
-            }]
-        },
-        options: { responsive: true, scales: { y: { beginAtZero: true, max: 12 } } }
-    });
+
 
     // 🎉 **Add Water Intake Chart**
     waterChartInstance = new Chart(ctxWater, {
