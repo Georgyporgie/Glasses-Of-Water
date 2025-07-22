@@ -116,6 +116,6 @@ font-family: myStats;
  color:#1c1d1d; z-index: -400; margin-bottom: -20px; font-size: 20px;
 }
 
-p { font-style: optical-sizing;
+p { font-optical-sizing: auto;
   }
 
